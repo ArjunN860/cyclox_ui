@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CycloX Drive 15 - Cycloidal Gear System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-dark: #1e40af;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --highlight-bg: rgba(59, 130, 246, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #0a0f1a 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 144, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 25s ease-in-out infinite reverse;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .cta-button {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid var(--accent);
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-button:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        .cta-button.outline {
+            background: transparent;
+            color: var(--accent-light);
+            border-color: var(--accent-light);
+        }
+
+        .cta-button.outline:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Specs Grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .spec-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .spec-card:nth-child(1) { animation-delay: 0.1s; }
+        .spec-card:nth-child(2) { animation-delay: 0.2s; }
+        .spec-card:nth-child(3) { animation-delay: 0.3s; }
+        .spec-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spec-card:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .spec-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .spec-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .spec-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-light);
+            margin-bottom: 8px;
+        }
+
+        .spec-subtext {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Sections */
+        .section {
+            padding: 100px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Overview Section */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+
+        .overview-card:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border-color: var(--accent);
+            transform: translateY(-10px);
+        }
+
+        .overview-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .overview-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .overview-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Feature List */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--success);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(16, 185, 129, 0.12);
+            transform: translateX(8px);
+        }
+
+        .feature-check {
+            color: var(--success);
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .feature-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Status Timeline */
+        .status-timeline {
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .timeline-item.completed::before {
+            background: var(--success);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 20px;
+            width: 2px;
+            height: 40px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Applications */
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .app-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 1px solid var(--accent);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--accent-light);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .app-badge:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.2) 100%);
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            .spec-card {
+                padding: 20px;
+            }
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">CycloX Drive 15</h1>
+            <p class="hero-subtitle">Precision Cycloidal Gear Reduction System</p>
+            <p class="hero-description">
+                A high-torque, compact cycloidal drive engineered for precision motion applications. 
+                Designed with manufacturability and robotic actuation in mind.
+            </p>
+            
+            <div class="hero-cta">
+                <button class="cta-button">View Details</button>
+                <button class="cta-button outline">Documentation</button>
+            </div>
+
+            <!-- Key Specs -->
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <div class="spec-icon">⚙️</div>
+                    <div class="spec-label">Reduction Ratio</div>
+                    <div class="spec-value">15:1</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-icon">💪</div>
+                    <div class="spec-label">Rated Torque</div>
+                    <div class="spec-value">XX Nm</div>
+                    <div class="spec-subtext">to be measured</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-icon">📏</div>
+                    <div class="spec-label">Compact Size</div>
+                    <div class="spec-value">XXmm</div>
+                    <div class="spec-subtext">optimized design</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-icon">⚡</div>
+                    <div class="spec-label">Efficiency</div>
+                    <div class="spec-value">~85%</div>
+                    <div class="spec-subtext">estimated</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section class="section">
+            <h2 class="section-title">System Overview</h2>
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="overview-icon">🔧</div>
+                    <div class="overview-title">Cycloidal Design</div>
+                    <div class="overview-text">
+                        Single-stage cycloidal profile with 16 lobes and 17 pin configuration for smooth, high-ratio torque multiplication.
+                    </div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon">🎯</div>
+                    <div class="overview-title">High Precision</div>
+                    <div class="overview-text">
+                        &lt;10 arcmin backlash target achieved through precision eccentric mechanism and pin-type output coupling.
+                    </div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon">📦</div>
+                    <div class="overview-title">Compact & Light</div>
+                    <div class="overview-text">
+                        Enclosed housing design optimized for weight and size, ideal for robotic joint integration.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="section">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <div class="feature-text">Single-stage reduction for compact form factor</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <div class="feature-text">High torque density suitable for robotic actuation</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <div class="feature-text">Precision eccentric mechanism with standard radial bearings</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <div class="feature-text">3D printable prototype with optimized geometry</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <div class="feature-text">Pin-type output coupling for smooth power transmission</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <div class="feature-text">Designed for manufacturability and scalability</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Development Status -->
+        <section class="section">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                In Development — Testing Phase
+            </div>
+            <h2 class="section-title">Development Progress</h2>
+            
+            <div class="status-timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Design & Analysis</div>
+                        <div class="timeline-desc">Cycloidal profile optimization, mechanical calculations, and CAD modeling completed.</div>
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Prototype Manufacturing</div>
+                        <div class="timeline-desc">3D printed polymer prototype assembled with test components.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Performance Testing</div>
+                        <div class="timeline-desc">
+                            <strong>Torque Testing:</strong> Measuring input/output torque and load capacity<br>
+                            <strong>Efficiency Analysis:</strong> Input/output power measurement across RPM ranges<br>
+                            <strong>Backlash Validation:</strong> Angular play measurement using dial indicators
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Refinement & Optimization</div>
+                        <div class="timeline-desc">Design iterations based on test results and mechanical insights.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Applications -->
+        <section class="section">
+            <h2 class="section-title">Applications</h2>
+            <div class="applications-grid">
+                <div class="app-badge">🤖 Robotic Joints</div>
+                <div class="app-badge">⚙️ Actuator Systems</div>
+                <div class="app-badge">🔄 Precision Motion</div>
+                <div class="app-badge">🎯 Transmission</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">CycloX Drive 15 — Engineering Portfolio • Testing & Documentation in Progress</p>
+    </footer>
+
+    <script>
+        // Smooth scroll for buttons
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelector('.section').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
